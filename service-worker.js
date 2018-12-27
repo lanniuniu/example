@@ -1,9 +1,9 @@
-importScripts("/precache-manifest.e3dda262e7dacca0980545047f3ba80a.js");
+importScripts("./precache-manifest.f4fc4fc85627a26d7510132855f47a82.js");
 
 
-        importScripts('/static/workbox-v3.6.3/workbox-sw.js');
+        importScripts('./static/workbox-v3.6.3/workbox-sw.js');
         workbox.setConfig({
-            modulePathPrefix: '/static/workbox-v3.6.3/'
+            modulePathPrefix: './static/workbox-v3.6.3/'
         });
     /**
  * @file service-worker.js with workbox api
@@ -50,16 +50,13 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
 //         ]
 //     })
 // );
-self.addEventListener('push', function (e) {
-    var data = e.data;
-    if (e.data) {
-        data = data.json();
-        console.log('push的数据为：', data);
-        self.registration.showNotification(data.text);
-    }
-    else {
-        console.log('push没有任何数据');
+self.addEventListener('push', function (event) {
+    if (event.data) {
+        const promiseChain = Promise.resolve(event.data).then(data => {
+            return self.registration.showNotification('hello world', {})
+        });
+        event.waitUntil(promiseChain);
     }
 });
 
-workbox.routing.registerNavigationRoute('/index.html');
+workbox.routing.registerNavigationRoute('./index.html');
